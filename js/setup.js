@@ -7,8 +7,6 @@ var EYES_COLORS = ['black', 'red', 'blue', 'yellow', 'green'];
 var MIN_NUMBER = 0;
 var QUANTITY_WIZARD = 4;
 
-var userDialog = document.querySelector('.setup');
-userDialog.classList.remove('hidden');
 var userSetup = document.querySelector('.setup-similar');
 userSetup.classList.remove('hidden');
 
@@ -51,3 +49,45 @@ var renderFragment = function (dataWizard) {
 };
 
 similarListElement.appendChild(renderFragment(allWizards));
+
+
+var setup = document.querySelector('.setup');
+var setupOpen = document.querySelector('.setup-open');
+var setupClose = setup.querySelector('.setup-close');
+var inputName = setup.querySelector('.setup-user-name');
+
+var openPopup = function () {
+  setup.classList.remove('hidden');
+};
+
+setupOpen.addEventListener('click', function () {
+  openPopup();
+});
+
+setupOpen.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === 13) {
+    openPopup();
+  }
+});
+
+setupClose.addEventListener('click', function () {
+  setup.classList.add('hidden');
+});
+
+document.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === 27) {
+    setup.classList.add('hidden');
+  }
+});
+
+inputName.addEventListener('keydown', function (evt) {
+  evt.stopPropagation();
+});
+
+setupClose.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === 13) {
+    setup.classList.add('hidden');
+  }
+});
+
+
