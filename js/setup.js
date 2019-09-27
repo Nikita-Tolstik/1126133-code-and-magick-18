@@ -9,7 +9,6 @@ var MIN_NUMBER = 0;
 var QUANTITY_WIZARD = 4;
 var ESC_KEYCODE = 27;
 var ENTER_KEYCODE = 13;
-var FIRST_ELEMENT = 0;
 
 var userSetup = document.querySelector('.setup-similar');
 userSetup.classList.remove('hidden');
@@ -105,7 +104,6 @@ setupClose.addEventListener('keydown', function (evt) {
   }
 });
 
-
 inputName.addEventListener('keydown', function (evt) {
   evt.stopPropagation();
 });
@@ -115,9 +113,9 @@ var setupWizard = setup.querySelector('.setup-wizard');
 var setupCoatWizard = setupWizard.querySelector('.wizard-coat');
 var setupEyesWizard = setupWizard.querySelector('.wizard-eyes');
 var setupFireball = setup.querySelector('.setup-fireball-wrap');
-var coatWizardName = document.getElementsByName('coat-color')[FIRST_ELEMENT];
-var eyesWizardName = document.getElementsByName('eyes-color')[FIRST_ELEMENT];
-var fireballWizardName = document.getElementsByName('fireball-color')[FIRST_ELEMENT];
+var coatWizardName = document.querySelector('input[name=coat-color]');
+var eyesWizardName = document.querySelector('input[name=eyes-color]');
+var fireballWizardName = document.querySelector('input[name=fireball-color]');
 
 setupCoatWizard.addEventListener('click', function () {
   var coatColor = COAT_COLORS[getRandomNumber(MIN_NUMBER, COAT_COLORS.length)];
