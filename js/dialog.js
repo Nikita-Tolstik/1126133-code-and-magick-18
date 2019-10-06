@@ -6,8 +6,8 @@
   var setupOpen = document.querySelector('.setup-open');
   var setupClose = setup.querySelector('.setup-close');
   var inputName = setup.querySelector('.setup-user-name');
-  var setupForm = setup.querySelector('.setup-wizard-form');
-  setupForm.setAttribute('action', 'https://js.dump.academy/code-and-magick');
+  var form = setup.querySelector('.setup-wizard-form');
+  form.setAttribute('action', 'https://js.dump.academy/code-and-magick');
 
   var x = setup.style.left;
   var y = setup.style.top;
@@ -111,4 +111,22 @@
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
   });
+
+  // обработчик отправки формы отменяет действие формы по умолчанию и отправляет данные формы на сервер https://js.dump.academy/code-and-magick.
+  // А при успешной загрузке данных на сервер закрывает окно редактирования персонажа.
+  form.addEventListener('submit', function (evtSubmit) {
+
+    window.backend.save(new FormData(form), successHandler, window.backend.errorHandler);
+
+    evtSubmit.preventDefault();
+  });
+
+
+  var successHandler = function (response) {
+    // проверка успешной загрузки данных
+    if (response) {
+      setup.classList.add('hidden');
+    }
+  };
+
 })();
