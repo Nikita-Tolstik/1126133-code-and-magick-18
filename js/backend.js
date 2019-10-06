@@ -17,13 +17,13 @@
     // Функция отправки данных игрока на сервер
     save: function (data, onLoad, onError) {
 
-      checkStatus(data, renderXhr(), onLoad, onError, URL_POST, POST);
+      checkStatus(data, onLoad, onError, URL_POST, POST);
     },
 
     // Функция загрузки данных с сервера
     load: function (onLoad, onError) {
 
-      checkStatus(DATA_NULL, renderXhr(), onLoad, onError, URL_GET, GET);
+      checkStatus(DATA_NULL, onLoad, onError, URL_GET, GET);
     },
 
     // Функция обработки возможных ошибок при загрузке (отрисовка в DOM)
@@ -42,7 +42,10 @@
   };
 
   // Функция отправки данных и проверки запросов на ошибки
-  var checkStatus = function (data, xhr, onLoad, onError, url, method) {
+  var checkStatus = function (data, onLoad, onError, url, method) {
+    var xhr = new XMLHttpRequest();
+    xhr.responseType = 'json';
+
     xhr.addEventListener('load', function () {
       if (xhr.status === STATUS_OK) {
         onLoad(xhr.response);
@@ -61,13 +64,6 @@
     xhr.timeout = TIMEOUT;
     xhr.open(method, url);
     xhr.send(data);
-  };
-
-  var renderXhr = function () {
-    var xhr = new XMLHttpRequest();
-    xhr.responseType = 'json';
-
-    return xhr;
   };
 
 })();
