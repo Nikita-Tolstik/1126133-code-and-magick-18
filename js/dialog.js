@@ -116,14 +116,17 @@
   // А при успешной загрузке данных на сервер закрывает окно редактирования персонажа.
   form.addEventListener('submit', function (evtSubmit) {
 
-    window.backend.save(new FormData(form), function (response) {
-      // проверка успешной загрузки данных
-      if (response) {
-        setup.classList.add('hidden');
-      }
-    });
+    window.backend.save(new FormData(form), successHandler, window.backend.errorHandler);
 
     evtSubmit.preventDefault();
   });
+
+
+  var successHandler = function (response) {
+    // проверка успешной загрузки данных
+    if (response) {
+      setup.classList.add('hidden');
+    }
+  };
 
 })();

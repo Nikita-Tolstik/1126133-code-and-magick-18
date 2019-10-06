@@ -3,34 +3,27 @@
 (function () {
   var URL_POST = 'https://js.dump.academy/code-and-magick';
   var URL_GET = 'https://js.dump.academy/code-and-magick/data';
+
+  var POST = 'POST';
+  var GET = 'GET';
+
   var TIMEOUT = 10000;
   var STATUS_OK = 200;
 
+  var DATA_NULL = null;
 
   window.backend = {
 
     // Функция отправки данных игрока на сервер
     save: function (data, onLoad, onError) {
-      var xhr = new XMLHttpRequest();
-      xhr.responseType = 'json';
 
-      checkStatus(xhr, onLoad, onError);
-
-      xhr.timeout = TIMEOUT;
-      xhr.open('POST', URL_POST);
-      xhr.send(data);
+      checkStatus(data, renderXhr(), onLoad, onError, URL_POST, POST);
     },
 
     // Функция загрузки данных с сервера
     load: function (onLoad, onError) {
-      var xhr = new XMLHttpRequest();
-      xhr.responseType = 'json';
 
-      checkStatus(xhr, onLoad, onError);
-
-      xhr.timeout = TIMEOUT;
-      xhr.open('GET', URL_GET);
-      xhr.send();
+      checkStatus(DATA_NULL, renderXhr(), onLoad, onError, URL_GET, GET);
     },
 
     // Функция обработки возможных ошибок при загрузке (отрисовка в DOM)
@@ -48,8 +41,8 @@
 
   };
 
-  // Функция проверки запросов на ошибки
-  var checkStatus = function (xhr, onLoad, onError) {
+  // Функция отправки данных и проверки запросов на ошибки
+  var checkStatus = function (data, xhr, onLoad, onError, url, method) {
     xhr.addEventListener('load', function () {
       if (xhr.status === STATUS_OK) {
         onLoad(xhr.response);
@@ -64,6 +57,17 @@
     xhr.addEventListener('timeout', function () {
       onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
     });
+
+    xhr.timeout = TIMEOUT;
+    xhr.open(method, url);
+    xhr.send(data);
+  };
+
+  var renderXhr = function () {
+    var xhr = new XMLHttpRequest();
+    xhr.responseType = 'json';
+
+    return xhr;
   };
 
 })();
