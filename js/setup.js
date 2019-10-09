@@ -33,31 +33,31 @@
 
 
   var wizards = [];
+  // Функция присвоения баллов похожести по критерию плаща и глаз
+  var getRank = function (wizard, coat, eyes) {
+    var rank = 0;
+
+    if (wizard.colorCoat === coat) {
+      rank += 2;
+    }
+    if (wizard.colorEyes === eyes) {
+      rank += 1;
+    }
+
+    return rank;
+  };
+
 
   // Функция фильтрации волшебниокв по плащу и глазам
-  window.updateWizards = function (coat, eyes) {
-    var sameCoatAndEyesWizards = wizards.filter(function (it) {
-      return it.colorCoat === coat &&
-        it.colorEyes === eyes;
-    });
+  window.updateWizards = function (coatColor, eyesColor) {
 
-    var sameCoatWizards = wizards.filter(function (it) {
-      return it.colorCoat === coat;
-    });
-    var sameEyesWizards = wizards.filter(function (it) {
-      return it.colorEyes === eyes;
-    });
-
-    var filteredWizards = sameCoatAndEyesWizards;
-    filteredWizards = filteredWizards.concat(sameCoatWizards);
-    filteredWizards = filteredWizards.concat(sameEyesWizards);
-    filteredWizards = filteredWizards.concat(wizards);
-
-
-    var uniqueWizards = filteredWizards.filter(function (it, i) {
-      return filteredWizards.indexOf(it) === i;
-    });
-    renderWizards(uniqueWizards);
+    renderWizards(wizards.slice().sort(function (left, right) {
+      var rankDiff = getRank(right, coatColor, eyesColor) - getRank(left, coatColor, eyesColor);
+      if (rankDiff === 0) {
+        rankDiff = wizards.indexOf(left) - wizards.indexOf(right);
+      }
+      return rankDiff;
+    }));
   };
 
   // Отрисовка волшебников в дом
@@ -77,7 +77,7 @@
 
   // Функция успешной загразки данных с сервера
   var successHandler = function (data) {
-    wizards = data;
+    wizards = data; // Сохранение в переменную массива данных с сервера
     window.updateWizards();
   };
 

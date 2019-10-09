@@ -28,7 +28,6 @@
   setupCoatWizard.addEventListener('click', function () {
     coatColor = isColorChange(setupCoatWizard, window.util.COAT_COLORS, coatWizardName);
     window.updateWizards(coatColor); // Вызов функции фильтрации волшебниокв по плащу
-
   });
 
   var eyesColor;
