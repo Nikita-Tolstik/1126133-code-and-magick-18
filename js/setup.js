@@ -2,26 +2,10 @@
 
 // Создание других волшебников
 (function () {
-  // var WIZARD_NAMES = ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'];
-  // var WIZARD_SURNAMES = ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'];
 
   var userSetup = document.querySelector('.setup-similar');
-
   var similarListElement = document.querySelector('.setup-similar-list');
   var similarWizardTemplate = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item');
-
-  // var renderDescriptionWizard = function (name, surname, coatColor, eyesColor, quantity) {
-  //   var descriptionWizards = [];
-  //   for (var i = 0; i < quantity; i++) {
-  //     var wizard = {
-  //       name: name[window.util.getRandomNumber(name.length)] + ' ' + surname[window.util.getRandomNumber(surname.length)],
-  //       coatColor: coatColor[window.util.getRandomNumber(coatColor.length)],
-  //       eyesColor: eyesColor[window.util.getRandomNumber(eyesColor.length)]
-  //     };
-  //     descriptionWizards.push(wizard);
-  //   }
-  //   return descriptionWizards;
-  // };
 
   var renderWizard = function (wizard) {
     var wizardElement = similarWizardTemplate.cloneNode(true);
@@ -31,16 +15,18 @@
     return wizardElement;
   };
 
-
+  var coatColor;
+  var eyesColor;
   var wizards = [];
+
   // Функция присвоения баллов похожести по критерию плаща и глаз
-  var getRank = function (wizard, coat, eyes) {
+  var getRank = function (wizard) {
     var rank = 0;
 
-    if (wizard.colorCoat === coat) {
+    if (wizard.colorCoat === coatColor) {
       rank += 2;
     }
-    if (wizard.colorEyes === eyes) {
+    if (wizard.colorEyes === eyesColor) {
       rank += 1;
     }
 
@@ -48,17 +34,29 @@
   };
 
 
-  // Функция фильтрации волшебниокв по плащу и глазам
-  window.updateWizards = function (coatColor, eyesColor) {
+  // Функция сортировки волшебниокв по плащу и глазам
+  var updateWizards = function () {
 
-    renderWizards(wizards.slice().sort(function (left, right) {
-      var rankDiff = getRank(right, coatColor, eyesColor) - getRank(left, coatColor, eyesColor);
+    renderWizards(wizards.sort(function (left, right) {
+      var rankDiff = getRank(right) - getRank(left);
       if (rankDiff === 0) {
         rankDiff = wizards.indexOf(left) - wizards.indexOf(right);
       }
       return rankDiff;
     }));
   };
+
+
+  window.wizard.onEyesChange = window.debounce(function (color) {
+    eyesColor = color;
+    updateWizards();
+  });
+
+  window.wizard.onCoatChange = window.debounce(function (color) {
+    coatColor = color;
+    updateWizards();
+  });
+
 
   // Отрисовка волшебников в дом
   var renderWizards = function (data) {
@@ -78,7 +76,7 @@
   // Функция успешной загразки данных с сервера
   var successHandler = function (data) {
     wizards = data; // Сохранение в переменную массива данных с сервера
-    window.updateWizards();
+    updateWizards();
   };
 
   // Вызов функции загрузки данных с сервера
