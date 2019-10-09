@@ -4,7 +4,6 @@
 (function () {
   // var WIZARD_NAMES = ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'];
   // var WIZARD_SURNAMES = ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'];
-  var QUANTITY_WIZARD = 4;
 
   var userSetup = document.querySelector('.setup-similar');
 
@@ -32,17 +31,54 @@
     return wizardElement;
   };
 
-  // Функция успешной загразки данных с сервера
-  var successHandler = function (wizards) {
-    var shuffleWizards = window.util.shuffleArray(wizards);
+
+  var wizards = [];
+
+  // Функция фильтрации волшебниокв по плащу и глазам
+  window.updateWizards = function (coat, eyes) {
+    var sameCoatAndEyesWizards = wizards.filter(function (it) {
+      return it.colorCoat === coat &&
+        it.colorEyes === eyes;
+    });
+
+    var sameCoatWizards = wizards.filter(function (it) {
+      return it.colorCoat === coat;
+    });
+    var sameEyesWizards = wizards.filter(function (it) {
+      return it.colorEyes === eyes;
+    });
+
+    var filteredWizards = sameCoatAndEyesWizards;
+    filteredWizards = filteredWizards.concat(sameCoatWizards);
+    filteredWizards = filteredWizards.concat(sameEyesWizards);
+    filteredWizards = filteredWizards.concat(wizards);
+
+
+    var uniqueWizards = filteredWizards.filter(function (it, i) {
+      return filteredWizards.indexOf(it) === i;
+    });
+    renderWizards(uniqueWizards);
+  };
+
+  // Отрисовка волшебников в дом
+  var renderWizards = function (data) {
+    var takeNumber = data.length > 4 ? 4 : data.length;
+    similarListElement.innerHTML = '';
     var fragment = document.createDocumentFragment();
-    for (var j = 0; j < QUANTITY_WIZARD; j++) {
-      fragment.appendChild(renderWizard(shuffleWizards[j]));
+    for (var j = 0; j < takeNumber; j++) {
+      fragment.appendChild(renderWizard(data[j]));
     }
 
     similarListElement.appendChild(fragment);
 
     userSetup.classList.remove('hidden');
+  };
+
+
+  // Функция успешной загразки данных с сервера
+  var successHandler = function (data) {
+    wizards = data;
+    window.updateWizards();
   };
 
   // Вызов функции загрузки данных с сервера

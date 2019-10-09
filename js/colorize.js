@@ -11,25 +11,35 @@
   var eyesWizardName = document.querySelector('[name=eyes-color]');
   var fireballWizardName = document.querySelector('[name=fireball-color]');
 
+
   var isColorChange = function (element, thingColor, inputValue) {
-    var color = thingColor[window.util.getRandomNumber(thingColor.length)];
+    var newColor = thingColor[window.util.getRandomNumber(thingColor.length)];
     if (element.tagName.toLowerCase() === 'div') {
-      element.style.backgroundColor = color;
+      element.style.backgroundColor = newColor;
     } else {
-      element.style.fill = color;
+      element.style.fill = newColor;
     }
-    inputValue.value = color;
+    inputValue.value = newColor;
+
+    return newColor;
   };
 
+  var coatColor;
   setupCoatWizard.addEventListener('click', function () {
-    isColorChange(setupCoatWizard, window.util.COAT_COLORS, coatWizardName);
+    coatColor = isColorChange(setupCoatWizard, window.util.COAT_COLORS, coatWizardName);
+    window.updateWizards(coatColor); // Вызов функции фильтрации волшебниокв по плащу
+
   });
 
+  var eyesColor;
   setupEyesWizard.addEventListener('click', function () {
-    isColorChange(setupEyesWizard, window.util.EYES_COLORS, eyesWizardName);
+    eyesColor = isColorChange(setupEyesWizard, window.util.EYES_COLORS, eyesWizardName);
+    window.updateWizards(coatColor, eyesColor); // Вызов функции фильтрации волшебниокв по плащу и глазам
   });
 
   setupFireball.addEventListener('click', function () {
     isColorChange(setupFireball, window.util.FIREBALL_COLORS, fireballWizardName);
   });
+
+
 })();
